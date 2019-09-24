@@ -135,7 +135,10 @@ class FormattedLayerFile(LayerFile):
         # While more data in file
         while ipos + self._data_size < self.totalbytes:
             # Seek and get next header
-            self.file.seek(ipos + self._data_size)
+            try:
+                self.file.seek(ipos + self._data_size)
+            except IOError:
+                self.file.seek(self._data_size, 1)
             header_info = self.header.read_header(self.file)[0]
             ipos = self.file.tell()
             self._store_record(header_info, ipos)
